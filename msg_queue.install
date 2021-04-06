@@ -1,0 +1,29 @@
+#!/bin/bash
+
+daemon=msg_queue_dmn
+device=msg_queue_dev
+devcls=msg_queue_cls
+
+make &&
+
+echo KERNEL==\"${device}\", SUBSYSTEM==\"${devcls}\", MODE=\"0666\" > 99-${device}.rules &&
+
+echo ${daemon}_stor=$PWD/$daemon.stor > $daemon.env &&
+
+echo [Unit] > $daemon.service &&
+echo Description=$daemon >> $daemon.service &&
+echo >> $daemon.service &&
+echo [Service] >> $daemon.service &&
+echo Type=forking >> $daemon.service &&
+echo Restart=no >> $daemon.service &&
+echo EnvironmentFile=$PWD/$daemon.env >> $daemon.service &&
+echo ExecStart=$PWD/$daemon \$${daemon}_stor >> $daemon.service &&
+
+echo Install device rules file &&
+sudo mv 99-${device}.rules /etc/udev/rules.d/ &&
+
+echo Install service file &&
+sudo mv $daemon.service /etc/systemd/system/ &&
+
+echo Install loadable kernel module &&
+sudo insmod msg_queue_lkm.ko
