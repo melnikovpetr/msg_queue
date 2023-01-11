@@ -1,0 +1,16 @@
+#!/bin/bash
+
+daemon=msg_queue_dmn
+device=msg_queue_dev
+devcls=msg_queue_cls
+
+echo Uninstall service
+sudo systemctl stop $daemon.service
+sudo rm /etc/systemd/system/$daemon.service
+rm $daemon.env
+
+echo Uninstall loadable kernel module
+sudo rmmod msg_queue_lkm.ko
+sudo rm /etc/udev/rules.d/99-${device}.rules
+
+make clean

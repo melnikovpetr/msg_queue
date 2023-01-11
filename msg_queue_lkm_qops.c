@@ -86,7 +86,6 @@ static ssize_t queue_read_msg(struct file* fp, ssize_t (*read)(struct file*, cha
 	if (queue_elem)
 	{
 		ssize_t ret = read(fp, (char*)&queue_elem->size, sizeof(queue_elem->size), &fp->f_pos);
-		printk(KERN_INFO "msg_queue_lkm: queue_read_msg size[%lu]", queue_elem->size);
 		if ((ret != sizeof(queue_elem->size)) || (queue_elem->size > MAX_MSG_SIZE))
 		{
 			if (ret >= 0) ret = -EINVAL;
@@ -94,7 +93,6 @@ static ssize_t queue_read_msg(struct file* fp, ssize_t (*read)(struct file*, cha
 		else
 		{
 			ret = read(fp, queue_elem->msg, queue_elem->size, &fp->f_pos);
-			printk(KERN_INFO "msg_queue_lkm: queue_read_msg msg[%s]", queue_elem->msg);
 			if ((ret > 0) && (queue_elem->size != (size_t)ret)) ret = -EINVAL;
 		}
 		return ret;
@@ -146,7 +144,7 @@ static ssize_t queue_read(struct file* fp, ssize_t (*read)(struct file*, char*, 
 static ssize_t queue_write(struct file* fp, ssize_t (*write)(struct file*, const char*, size_t, loff_t*), struct queue_elem_t* pos)
 {
 	size_t size = 0;
-	for (;pos != NULL; pos = pos->next, size++)
+	for (;pos != NULL; pos = pos->prev, size++)
 	{
 		ssize_t ret = queue_write_msg(fp, write, pos);
 		if (ret < 0) return ret;

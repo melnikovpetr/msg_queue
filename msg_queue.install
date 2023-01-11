@@ -19,11 +19,10 @@ echo Restart=no >> $daemon.service &&
 echo EnvironmentFile=$PWD/$daemon.env >> $daemon.service &&
 echo ExecStart=$PWD/$daemon \$${daemon}_stor >> $daemon.service &&
 
-echo Install device rules file &&
-sudo mv 99-${device}.rules /etc/udev/rules.d/ &&
-
-echo Install service file &&
+echo Install service &&
 sudo mv $daemon.service /etc/systemd/system/ &&
+sudo systemctl daemon-reload &&
 
 echo Install loadable kernel module &&
+sudo mv 99-${device}.rules /etc/udev/rules.d/ &&
 sudo insmod msg_queue_lkm.ko

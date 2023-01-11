@@ -68,7 +68,7 @@ int cmd_push(int fd)
 		ret = write(fd, buffer, strlen(buffer));
 		if (ret < 0)
 		{
-			perror("Failed to read the message from the device");
+			perror("Failed to write the message to the device");
 			read_ch();
 		}
 		else
@@ -99,6 +99,7 @@ int cmd_load(int fd, int async)
 	}
 
     if (!async) printf("%zd message(s) have been loaded to the message queue\n", ret);
+	printf("Press Enter to continue...\n");
 	read_ch();
 
 	return ret;
@@ -123,26 +124,29 @@ int cmd_save(int fd, int async)
 	}
 
     if (!async) printf("%zd message(s) have been written to the file\n", ret);
+	printf("Press Enter to continue...\n");
 	read_ch();
 
 	return ret;
 }
 
-int cmd_strt(int fd)
+int cmd_strt()
 {
     printf("\e[1;1H\e[2J"); // clear
     printf("Starting pop service\n");
     int ret = system("sudo systemctl start " DAEMON_NAME ".service");
-    read_ch();
+	printf("Press Enter to continue...\n");
+	read_ch();
     return ret;
 }
 
-int cmd_stop(int fd)
+int cmd_stop()
 {
     printf("\e[1;1H\e[2J"); // clear
     printf("Stopping pop service\n");
     int ret = system("sudo systemctl stop " DAEMON_NAME ".service");
-    read_ch();
+	printf("Press Enter to continue...\n");
+	read_ch();
     return ret;
 }
 
@@ -187,8 +191,8 @@ int main()
             if (cmd == *CMD_A_LD) { ret = cmd_load(fd, 1); break; } else
             if (cmd == *CMD_SAVE) { ret = cmd_save(fd, 0); break; } else
             if (cmd == *CMD_A_SV) { ret = cmd_save(fd, 1); break; } else
-            if (cmd == *CMD_STRT) { ret = cmd_strt(fd);    break; } else
-            if (cmd == *CMD_STOP) { ret = cmd_stop(fd);    break; } else
+			if (cmd == *CMD_STRT) { ret = cmd_strt();      break; } else
+			if (cmd == *CMD_STOP) { ret = cmd_stop();      break; } else
             {}
 		}
 	}

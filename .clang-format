@@ -8,7 +8,7 @@ AlwaysBreakAfterDefinitionReturnType: None
 BreakBeforeBraces: Allman
 BinPackArguments: true
 BinPackParameters: true
-ColumnLimit: 100
+ColumnLimit: 120
 # Note that on versions after 4.0 you need to specify
 # SpaceAfterTemplateKeyword: true
 # which is not an option prior to 4.0. Later versions
@@ -16,5 +16,5 @@ ColumnLimit: 100
 # For your commits to be compatible with clang 3.8
 # you are best off running clang-format 3.8 on your
 # system
-Standard: Cpp03
+Standard: Cpp14
 ...
